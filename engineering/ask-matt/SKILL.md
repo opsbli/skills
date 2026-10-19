@@ -12,6 +12,10 @@ Before stating what a skill does or recommending a step be skipped, read that sk
 
 A **flow** is a path through the skills. Most paths run along one **main flow**, and two **on-ramps** merge onto it. Everything else is standalone, or a vocabulary layer that runs underneath.
 
+## When the gate is on
+
+If this workspace runs with an orchestration gate, the entry procedure is **`/dev-flow`**, not this skill. It classifies the request, grades the risk, writes the snapshot, and only then routes. Treat it as the front door and this file as the map behind it. Without a gate, start here.
+
 ## The main flow: idea → ship
 
 The route most work travels. You have an idea and want it built.
@@ -102,3 +106,5 @@ Off the main flow entirely.
 ## Precondition
 
 **`/setup-matt-pocock-skills`**: run before your first engineering flow to configure the issue tracker, triage labels, and doc layout the other skills assume. Custom issue trackers also work.
+
+**`/project-standards`**: run once per repo to write `docs/agents/project-standards.md`, the document `/code-review`'s Standards axis and `/implement`'s close-out enforce. It reads a code generator's templates as the standard when one exists, and infers from code when none does. Re-run it whenever a generator, framework, or convention changes underneath the document.

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skills 工作流</title>
+<style>
+  :root {
+    --bg: #141418;
+    --surface: #1c1c22;
+    --surface-2: #232329;
+    --line: rgba(255, 255, 255, 0.10);
+    --line-strong: rgba(255, 255, 255, 0.18);
+    --text: #e8e8ec;
+    --muted: #9a9aa4;
+    --dim: #6e6e78;
+    --amber: #ef9f27;
+    --purple: #8b83e8;
+    --blue: #5b9de8;
+    --teal: #4bbf9a;
+    --gray: #8a8a94;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 48px 24px 72px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  main { max-width: 940px; margin: 0 auto; }
+
+  header { margin-bottom: 40px; }
+  h1 { margin: 0 0 8px; font-size: 24px; font-weight: 600; letter-spacing: -0.01em; }
+  header p { margin: 0; color: var(--muted); font-size: 14px; }
+
+  .stage { margin-bottom: 34px; }
+
+  .stage > h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+
+  .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    font-size: 11px;
+    color: var(--dim);
+    flex: none;
+  }
+
+  .row { display: flex; align-items: stretch; gap: 14px; flex-wrap: wrap; }
+
+  .card {
+    flex: 1 1 260px;
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+
+  .card b { display: block; font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .card span { display: block; font-size: 12.5px; color: var(--muted); }
+
+  .card.amber { background: #2a2013; border-color: rgba(239, 159, 39, 0.35); }
+  .card.amber b { color: #f5cf8e; }
+  .card.amber span { color: #c9a061; }
+
+  .card.purple { background: #24203a; border-color: rgba(139, 131, 232, 0.40); }
+  .card.purple b { color: #c3bdf5; }
+  .card.purple span { color: #968fce; }
+
+  .join {
+    display: flex;
+    align-items: center;
+    color: var(--dim);
+    font-size: 16px;
+    flex: none;
+    padding: 0 2px;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+    padding: 5px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+  }
+
+  .tabs button {
+    flex: 1 1 0;
+    min-width: 108px;
+    padding: 9px 14px;
+    background: transparent;
+    border: 0;
+    border-radius: 8px;
+    color: var(--muted);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .tabs button:hover { color: var(--text); background: var(--surface-2); }
+
+  .tabs button[aria-selected="true"] {
+    background: var(--surface-2);
+    color: var(--text);
+    box-shadow: inset 0 0 0 1px var(--line-strong);
+  }
+
+  .panel { display: none; }
+  .panel.is-active { display: block; animation: fade 0.18s ease-out; }
+
+  @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .panel.is-active { animation: none; } }
+
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 13px 16px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 2px solid var(--gray);
+    border-radius: 10px;
+    margin-bottom: 8px;
+  }
+
+  .step.manual { border-left-color: var(--blue); }
+  .step.auto { border-left-color: var(--teal); }
+
+  .idx {
+    flex: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    background: var(--surface-2);
+    color: var(--dim);
+    border: 1px solid var(--line);
+    margin-top: 1px;
+  }
+
+  .step.manual .idx { color: var(--blue); border-color: rgba(91, 157, 232, 0.35); }
+  .step.auto .idx { color: var(--teal); border-color: rgba(75, 191, 154, 0.35); }
+
+  .body { flex: 1 1 auto; min-width: 0; }
+  .body b { display: block; font-size: 13.5px; font-weight: 600; margin-bottom: 2px; }
+  .body b code { font-family: "SF Mono", Consolas, "Cascadia Mono", monospace; font-size: 13px; }
+  .body span { display: block; font-size: 12.5px; color: var(--muted); }
+
+  .tag {
+    flex: none;
+    align-self: flex-start;
+    margin-top: 2px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid var(--line-strong);
+    color: var(--dim);
+    white-space: nowrap;
+  }
+
+  .tag.manual { color: var(--blue); border-color: rgba(91, 157, 232, 0.35); background: rgba(91, 157, 232, 0.08); }
+  .tag.auto { color: var(--teal); border-color: rgba(75, 191, 154, 0.35); background: rgba(75, 191, 154, 0.08); }
+
+  .done {
+    margin-top: 14px;
+    padding: 13px 16px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  .done b { display: block; color: var(--text); font-size: 12px; font-weight: 600; margin-bottom: 4px; letter-spacing: 0.03em; }
+
+  .note {
+    margin-top: 40px;
+    padding: 18px 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+
+  .note h3 { margin: 0 0 10px; font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0.02em; }
+  .note ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 12.5px; }
+  .note li { margin-bottom: 5px; }
+  .note li:last-child { margin-bottom: 0; }
+  .note code { font-family: "SF Mono", Consolas, "Cascadia Mono", monospace; color: var(--text); font-size: 12px; }
+
+  @media (max-width: 640px) {
+    body { padding: 28px 16px 48px; }
+    .row { flex-direction: column; }
+    .join { transform: rotate(90deg); align-self: center; }
+    .tag { display: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Skills 工作流</h1>
+    <p>标准从哪来，请求从哪进，四条链各自怎么走完</p>
+  </header>
+
+  <section class="stage">
+    <h2><span class="num">1</span>一次性前置 · 每个仓库跑一次</h2>
+    <div class="row">
+      <div class="card amber">
+        <b>setup-matt-pocock-skills</b>
+        <span>配置 issue tracker、triage 标签、ADR 布局</span>
+      </div>
+      <div class="join">→</div>
+      <div class="card amber">
+        <b>project-standards</b>
+        <span>探测代码生成器并产出 docs/agents/project-standards.md</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="stage">
+    <h2><span class="num">2</span>每次请求 · 唯一入口</h2>
+    <div class="card purple">
+      <b>dev-flow</b>
+      <span>分类 → 定风险 → 写快照 → 路由。不分类型都从这里进，它不是链上的一步。</span>
+    </div>
+  </section>
+
+  <section class="stage">
+    <h2><span class="num">3</span>按分类路由 · 四条链</h2>
+
+    <div class="tabs" role="tablist" aria-label="请求类型">
+      <button role="tab" id="tab-feature" aria-controls="panel-feature" aria-selected="true" data-tab="feature">需求</button>
+      <button role="tab" id="tab-defect" aria-controls="panel-defect" aria-selected="false" data-tab="defect">缺陷</button>
+      <button role="tab" id="tab-restructure" aria-controls="panel-restructure" aria-selected="false" data-tab="restructure">重构</button>
+      <button role="tab" id="tab-research" aria-controls="panel-research" aria-selected="false" data-tab="research">调研 / 提问</button>
+    </div>
+
+    <div class="panel is-active" id="panel-feature" role="tabpanel" aria-labelledby="tab-feature">
+      <div class="step manual">
+        <div class="idx">1</div>
+        <div class="body"><b><code>/grill-with-docs</code></b><span>需求澄清，边谈边写 GLOSSARY 与 ADR</span></div>
+        <div class="tag manual">人敲</div>
+      </div>
+      <div class="step manual">
+        <div class="idx">2</div>
+        <div class="body"><b><code>/to-spec</code></b><span>把对话固化成 spec，发布到 issue tracker</span></div>
+        <div class="tag manual">人敲</div>
+      </div>
+      <div class="step manual">
+        <div class="idx">3</div>
+        <div class="body"><b><code>/to-tickets</code></b><span>切成带阻塞边的 tracer ticket，每张票可独立交付</span></div>
+        <div class="tag manual">人敲</div>
+      </div>
+      <div class="step auto">
+        <div class="idx">4</div>
+        <div class="body"><b><code>/implement</code> 或 <code>/implement-spec</code></b><span>首次编辑前读标准；单张 ready 票用前者，≥2 张并行且总票数 ≥4 才用后者</span></div>
+        <div class="tag auto">可自动</div>
+      </div>
+      <div class="step auto">
+        <div class="idx">5</div>
+        <div class="body"><b><code>/code-review</code></b><span>Standards 与 Spec 双轴并行评审，Standards 轴读项目标准</span></div>
+        <div class="tag auto">可自动</div>
+      </div>
+      <div class="step auto">
+        <div class="idx">6</div>
+        <div class="body"><b><code>/pr</code></b><span>PR 正文给最小可视化、前后证据、单向/双向门判断</span></div>
+        <div class="tag auto">可自动</div>
+      </div>
+      <div class="done">
+        <b>完成判据</b>
+        每张票的 tdd 循环关闭，且 review 两轴都通过。第 1–3 步必须由人触发：决定做什么和怎么拆不能交给下游。
+      </div>
+    </div>
+
+    <div class="panel" id="panel-defect" role="tabpanel" aria-labelledby="tab-defect">
+      <div class="step auto">
+        <div class="idx">1</div>
+        <div class="body"><b><code>/diagnosing-bugs</code></b><span>先建一条对当前 bug 会变红的反馈回路，再谈假设</span></div>
+        <div class="tag auto">可自动</div>
+      </div>
+      <div class="step auto">
+        <div class="idx">2</div>
+        <div class="body"><b><code>/code-review</code></b><span>检查修复是否引入新偏差，Standards 轴对照项目标准</span></div>
+        <div class="tag auto">可自动</div>
+      </div>
+      <div class="step">
+        <div class="idx">3</div>
+        <div class="body"><b>commit</b><span>提交到当前分支，不自动 push</span></div>
+        <div class="tag">人工动作</div>
+      </div>
+      <div class="done">
+        <b>完成判据</b>
+        回归测试先红后绿、原始复现步骤不再复现、调试用的 <code>[DEBUG-*]</code> 插桩已全部删除。三者缺一不算修完。
+      </div>
+    </div>
+
+    <div class="panel" id="panel-restructure" role="tabpanel" aria-labelledby="tab-restructure">
+      <div class="step auto">
+        <div class="idx">1</div>
+        <div class="body"><b><code>/codebase-design</code></b><span>用深模块词汇确定新形状：接口、seam、杠杆点</span></div>
+        <div class="tag auto">可自动</div>
+      </div>
+      <div class="step auto">
+        <div class="idx">2</div>
+        <div class="body"><b><code>/implement</code></b><span>在新 seam 上重建，行为保持不变</span></div>
+        <div class="tag auto">可自动</div>
+      </div>
+      <div class="step auto">
+        <div class="idx">3</div>
+        <div class="body"><b><code>/code-review</code></b><span>重点看行为等价性与形态是否真的变浅</span></div>
+        <div class="tag auto">可自动</div>
+      </div>
+      <div class="done">
+        <b>完成判据</b>
+        行为不变要有 <code>verify-&lt;app&gt;</code> 驱动真实用户路径来证明，测试通过不算。同时形状必须更小或更浅，否则这次重构没有收益。
+      </div>
+    </div>
+
+    <div class="panel" id="panel-research" role="tabpanel" aria-labelledby="tab-research">
+      <div class="step auto">
+        <div class="idx">1</div>
+        <div class="body"><b><code>/research</code></b><span>对着高可信一手来源调查，产出带引用的 Markdown</span></div>
+        <div class="tag auto">可自动</div>
+      </div>
+      <div class="step manual">
+        <div class="idx">2</div>
+        <div class="body"><b>交给 <code>/grill-with-docs</code> 或 <code>/to-spec</code></b><span>调研本身不是终点，结论要进需求链才有产出</span></div>
+        <div class="tag manual">人敲</div>
+      </div>
+      <div class="done">
+        <b>完成判据</b>
+        有一份带引用的文件，且它被交给某条流程。停在 <code>docs/</code> 里没人读的研究等于没做。<br><br>
+        <b>纯提问不走链</b>
+        直接回答，仓库里不写入任何东西，连快照也不写——快照只保留一份当前计划，被侧问覆盖会抹掉正在执行的路线。
+      </div>
+    </div>
+  </section>
+
+  <section class="note">
+    <h3>标准在哪些环节生效</h3>
+    <ul>
+      <li><code>project-standards</code> 产出文档，之后不再出现在链上，属于横切约束。</li>
+      <li><code>/implement</code> 首次编辑前读取：有生成器先生成再扩展，手写生成器产物视为违规。</li>
+      <li><code>/code-review</code> 的 Standards 轴读取：文档与 diff 冲突时以文档为准，标记 ⚠️ 的条目不判违规。</li>
+      <li><code>/project-standards audit</code> 定期对照代码复查，发现规范与代码大面积背离时，要么修代码，要么由人修改文档。</li>
+    </ul>
+  </section>
+</main>
+
+<script>
+  (function () {
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+    var panels = Array.prototype.slice.call(document.querySelectorAll('.panel'));
+
+    function activate(tab) {
+      tabs.forEach(function (t) {
+        t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
+        t.setAttribute('tabindex', t === tab ? '0' : '-1');
+      });
+      panels.forEach(function (p) {
+        p.classList.toggle('is-active', p.id === 'panel-' + tab.dataset.tab);
+      });
+    }
+
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener('click', function () { activate(tab); });
+      tab.addEventListener('keydown', function (e) {
+        var next = null;
+        if (e.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
+        if (e.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length];
+        if (next) { e.preventDefault(); next.focus(); activate(next); }
+      });
+    });
+  })();
+</script>
+</body>
+</html>

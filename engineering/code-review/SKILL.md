@@ -35,6 +35,8 @@ Look for the originating spec, in this order:
 
 Search the repo for every file that documents how code should be written. When `CODING_STANDARDS.md` or `CONTRIBUTING.md` exists, it must be on the list.
 
+When `docs/agents/project-standards.md` exists it comes first: it is the repo's confirmed standard, produced by `/project-standards`, and it supersedes ad-hoc convention notes. Read its generator-contract section before judging generated code — where a template emits a shape the document does not otherwise describe, the template is the baseline and the diff is compliant for following it. A finding against a rule the document marks ⚠️ is not a violation, because unconfirmed items are not enforced.
+
 When the diff touches any `.ts` or `.tsx` file, the **`typescript-best-practices`** skill is a standards source as well: paste its rule table into the Standards sub-agent prompt, since the sub-agent has no other access to it. Its rules are hard violations where they name a mechanism (a bare `as`, a non-exhaustive switch, an unparsed boundary), and judgement calls where the rule needs context (object args on a hot path). A documented repo standard overrides it.
 
 On top of whatever the repo documents, the Standards axis always carries the **smell baseline** below: a fixed set of Fowler code smells (_Refactoring_, ch.3) that applies even when a repo documents nothing. Two rules bind it:

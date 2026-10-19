@@ -1,6 +1,9 @@
 # Agent workspace state: memory logs, session scratch. Local only.
 .workbuddy/
 
+# Transient flow artifacts: snapshots, tickets, decision maps. Per-person, never committed.
+.scratch/
+
 # OS / editor noise
 .DS_Store
 Thumbs.db

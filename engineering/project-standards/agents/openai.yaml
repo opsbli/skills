@@ -1,0 +1,5 @@
+interface:
+  display_name: "Project Standards"
+  short_description: "Enforceable standards, sourced from the generator"
+policy:
+  allow_implicit_invocation: false
