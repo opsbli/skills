@@ -8,6 +8,7 @@ Reachable only when you type them (Claude Code: `disable-model-invocation: true`
 
 - **[ask-matt](./ask-matt/SKILL.md)**: Ask which skill or flow fits your situation. A router over the user-invoked skills in this repo.
 - **[create-verification-skill](./create-verification-skill/SKILL.md)**: Generate a project-local skill that launches the app, drives it the way a user does, and captures proof of behavior, plus a feature map of what to cover.
+- **[maintain-verification-skill](./maintain-verification-skill/SKILL.md)**: The upkeep loop for that generated skill: re-read every feature from source, drive every feature live, triage drift against harness and product gaps, ship at most one PR of proven corrections.
 - **[grill-with-docs](./grill-with-docs/SKILL.md)**: Grilling session that also builds your project's domain model, sharpening terminology and updating `GLOSSARY.md` and ADRs inline.
 - **[triage](./triage/SKILL.md)**: Move issues through a state machine of triage roles.
 - **[improve-codebase-architecture](./improve-codebase-architecture/SKILL.md)**: Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.

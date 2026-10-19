@@ -44,12 +44,4 @@ Run its own instructions end to end once: launch, doctor, drive ONE mapped featu
 
 ## 5. Hand over the upkeep
 
-A feature map rots the moment the app changes, so say how to keep it honest. Run this pass periodically or after a feature area moves:
-
-- Read every feature file against source, one read-only subagent per file, and flag likely drift with citations.
-- Drive every feature live at least once. Source inspection never substitutes for the live pass.
-- Only edit the verification skill's own directory (its `SKILL.md`, `features/`, harness scripts). Never edit product code during the pass: a behavior the map describes that the app no longer does is either doc drift (fix the map) or a product regression (report it, don't paper over it).
-- Triage each gap: wrong user-facing description is doc drift, working behavior the harness can't drive is a harness gap, broken app behavior is a product gap that stays out of the skill fix.
-- Ship corrections in one PR, re-reading every changed file first, or report `clean` with no PR, or `blocked` with exactly what stopped it.
-
-Suggest a cadence only if the user asks.
+A feature map rots the moment the app changes, so say that before you finish: the map is the repo's maintained verification source, not a one-time snapshot. The upkeep loop is `/maintain-verification-skill`. It fixes index drift, re-reads every feature from source, drives every feature live, triages each gap as doc drift, harness gap, or product gap, and ships at most one PR of proven corrections. Suggest a cadence only if the user asks.
