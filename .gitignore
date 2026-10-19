@@ -1,0 +1,6 @@
+# Agent workspace state: memory logs, session scratch. Local only.
+.workbuddy/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
