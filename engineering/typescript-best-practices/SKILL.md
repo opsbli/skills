@@ -7,6 +7,8 @@ description: TypeScript rules for reading, writing, or reviewing a .ts or .tsx f
 
 Apply `/type-system-discipline` first: the table below is its TypeScript spelling. Two of those rules carry every row. A brand comes from a verifying type guard, once, at the boundary, and the rest of the program trusts it. External data is untyped until a parse turns it into a named domain type, and internal code re-validates nothing.
 
+These rules assume a strict `tsconfig`: `strict` on, plus `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes` where the code leans on index access or optional props. Read `tsconfig.json` before applying the table. If a flag is off, say which rule cannot bind and propose turning it on, rather than writing code the compiler will not check.
+
 | Rule | Summary |
 |------|---------|
 | Discriminated unions | Model variants with a `kind` literal discriminant so impossible states can't be represented. No optional-field bags. |
