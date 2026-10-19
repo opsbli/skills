@@ -63,10 +63,12 @@ Not feature work, just upkeep.
 
 ## Vocabulary underneath
 
-Four model-invoked references that run *beneath* the other skills, each the single source of truth for its own vocabulary: two for the language of the codebase, one for TypeScript, one for prose. Reach for them directly when the **words**, not the process, are the problem; or let the skills above pull them in.
+Six model-invoked references that run *beneath* the other skills, each the single source of truth for its own vocabulary: two for the domain and the module shape, two for type and boundary discipline, one for TypeScript, one for prose. Reach for them directly when the **words**, not the process, are the problem; or let the skills above pull them in.
 
 - **`/domain-modeling`**: sharpen the project's *domain* language: challenge a fuzzy term, resolve an overloaded word ("account" doing three jobs), record a hard-to-reverse decision as an ADR. It's the active discipline `/grill-with-docs` drives to keep `GLOSSARY.md` a clean glossary.
 - **`/codebase-design`** is the deep-module vocabulary (module, interface, depth, seam, adapter, leverage, locality) for designing a module's *shape*: a lot of behaviour behind a small interface at a clean seam. `/tdd` and `/improve-codebase-architecture` both speak it.
+- **`/type-system-discipline`** is the type layer: brand semantic primitives, treat external data as untyped until a parse, derive types from whatever schema already owns the shape. It's language-agnostic, and `/typescript-best-practices` is its TypeScript spelling.
+- **`/boundary-discipline`** decides *where* the guards go: validation at CLI args, config, network, and external APIs, typed and trusted inside, business logic in pure functions. It's what stops validation from scattering through the middle of the system, and it's why a unit test can run without a framework.
 - **`/typescript-best-practices`** is the TypeScript layer of that discipline: discriminated unions, branded primitives, no `as`, exhaustive switches, parse at the boundary. It fires on its own for any `.ts`/`.tsx` edit, and `/code-review`'s Standards axis carries it whenever the diff has TypeScript in it.
 - **`/unslop`** is the prose layer: the catalog of AI tells to cut from anything a human reads, including your replies, a spec, a ticket, a handoff, a PR body, or a review report. Every skill above that produces prose for a person applies it, and `/retro` owns tightening the ones it keeps catching.
 

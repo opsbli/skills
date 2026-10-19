@@ -1,0 +1,3 @@
+interface:
+  display_name: "Boundary Discipline"
+  short_description: "Validate at the edge, trust inside"

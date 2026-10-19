@@ -5,7 +5,7 @@ description: TypeScript rules for reading, writing, or reviewing a .ts or .tsx f
 
 # TypeScript best practices
 
-Two rules carry every row below. A brand comes from a verifying type guard, once, at the boundary, and the rest of the program trusts it. External data is untyped until a parse turns it into a named domain type, and internal code re-validates nothing. Both follow from making the compiler reject what should never exist, rather than writing handlers for it.
+Apply `/type-system-discipline` first: the table below is its TypeScript spelling. Two of those rules carry every row. A brand comes from a verifying type guard, once, at the boundary, and the rest of the program trusts it. External data is untyped until a parse turns it into a named domain type, and internal code re-validates nothing.
 
 | Rule | Summary |
 |------|---------|
@@ -20,7 +20,7 @@ Two rules carry every row below. A brand comes from a verifying type guard, once
 | Type guards | Must verify the claim. A lying guard is worse than `as` because the bug hides behind a name that says it's safe. Name them `isX` or `hasX`. |
 | Exhaustiveness | Inline `const _exhaustive: never = x;` in default arms so the compiler errors when a new variant is added. |
 | `satisfies` over `as` | Validates the value without widening literal types. |
-| Boundary validation | Parse where data crosses in, into a named domain type. `Record<string, unknown>` (however spelled) stops at that parse. Trust types inside. Validation belongs at CLI args, config, network, and external APIs, never inside business logic. |
+| Boundary validation | Parse where data crosses in, into a named domain type. `Record<string, unknown>` (however spelled) stops at that parse. Trust types inside. `/boundary-discipline` covers where validation belongs: CLI args, config, network, and external APIs, never inside business logic. |
 | Schema-derived types | Reach for `Pick`/`Omit`/`Parameters`/`ReturnType`/`Awaited`/`typeof` before declaring a new interface. |
 | Object args | Pass objects, not positional, so argument order is self-documenting. Skip on hot paths (per-frame render, tokenizers, parsers). |
 | Real tests | Don't mock what you can run. Prefer the framework's real test primitives with leak/disposable checks, and verify UI in a running build. Mock only what you can't run locally. |
