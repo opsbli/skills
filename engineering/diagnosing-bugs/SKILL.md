@@ -87,6 +87,8 @@ Do not proceed until you have reproduced **and** minimised.
 
 ## Phase 3: Hypothesise
 
+**Check for a repeat attempt first.** If two or more earlier fixes share one premise and all failed the same gate, the premise is now the suspect, not the bug. Write it as one sentence: the thing every failed fix assumed. Then find an observation that would come out differently if it were false, and run it. Look at how the failures are distributed, not just how big each one was. Do not rank a hypothesis that assumes the premise until that check has run. If it confirms the premise, the earlier fixes likely treated a consequence, so ask the next "why". If it contradicts, the cause is elsewhere, and what the failures have in common is what the premise failed to predict.
+
 Generate **3–5 ranked hypotheses** before testing any of them. Single-hypothesis generation anchors on the first plausible idea.
 
 Each hypothesis must be **falsifiable**: state the prediction it makes.
