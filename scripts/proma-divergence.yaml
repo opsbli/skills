@@ -1,0 +1,47 @@
+# 正文与 Proma 副本有意不同的 skill。
+#
+# 默认契约：副本正文与本仓逐字一致，只允许 `version` 行不同。
+#
+# 例外只有一个类别——**宿主绑定语句**：正文里有答案取决于运行时环境的句子
+# （skills 目录在哪、有没有 Skill 工具）。这类句子本仓写运行时中立版（本仓分发
+# 给多个宿主），副本写到它自己那个宿主上（副本只在一个宿主里跑）。
+#
+# 所以这里的每一条都是「两侧各自说了自己那句真话」，不是「Proma 落后了」。
+# 方向纪律：
+#   - 不要把本仓的中立措辞回灌给副本 → 那是把精确答案换成模糊答案。
+#   - 不要把副本的具体措辞抄回本仓 → 那是让本仓只在一种宿主里正确。
+# 没写 reason 的条目视为违约。
+#
+# ── 版本纪律（为什么这里不共享一个版本号）──────────────────────────────
+# Proma 的 parseSkillVersion(sourcePath) 比的是「内置副本 vs 工作区副本」，两者
+# 都在 Proma 内部；本仓的 version 字段不是它的输入。因此给两侧写同一个版本号是
+# 有害的：正文不同而版本相同，会让 compareSemver 判定「已是最新」，升级门失效，
+# 漂移被静默锁死。（这条已经踩过一次，见 2026-10 的 skill 版本漂移记录。）
+#
+# 所以分歧 skill 在本仓**不带** version，副本自己维护自己的版本线。本仓只记录
+# 「登记时副本是哪个版本」（proma_version），由 check_consistency.py 校验它没有
+# 悄悄移动。副本版本一旦变了，说明那边动过手，这条登记必须重新裁定——
+# 要么重新登记，要么删掉（正文重新一致时）。
+divergences:
+  semi-auto-flow:
+    proma_version: "0.4.0"
+    reason: >-
+      第 1 节。Proma 版断言「本运行时没有 Skill 工具，每个 /name 都是读取旁边的
+      SKILL.md」，这在 Proma 成立（其 skill 之间无法互调）；本仓分发给 Claude Code /
+      Codex / WorkBuddy，三者都有 Skill 工具，照搬会写出一条自相矛盾的指令。本仓版
+      改为「有 Skill 工具就调它，没有就读文件」，保留原文真正的主张：名字写进路线
+      不等于工作完成，文件必须被打开。本仓版对两个宿主都成立，但它对 Proma 读者更
+      含糊，因此不回灌。
+  create-verification-skill:
+    proma_version: "1.0.1"
+    reason: >-
+      skills 目录写法。Proma 版写死「本运行时显式提供 skill、不扫描 .workbuddy/，
+      写在那儿永不注册」，这在 Proma 成立；WorkBuddy 恰恰扫描
+      {workspace}/.workbuddy/skills/，本仓旧版据此写死 .workbuddy/skills/，在 Proma
+      成立不了。两个答案相反，故本仓改为「写宿主实际读取的那一处，并说明两者相反、
+      失效是静默的」。副本保持 Proma 特有答案，不回灌。
+  maintain-verification-skill:
+    proma_version: "1.0.1"
+    reason: >-
+      同上：定位目标 skill 时若只承认宿主配置目录，会漏掉项目点目录里的 verify-*。
+      本仓改为「两处都找，按宿主说明哪一处生效」；副本保持 Proma 特有答案。
