@@ -14,7 +14,7 @@ A **flow** is a path through the skills. Most paths run along one **main flow**,
 
 ## When the gate is on
 
-If this workspace runs with an orchestration gate, the entry procedure is **`/dev-flow`**, not this skill. It classifies the request, grades the risk, writes the snapshot, and only then routes. Treat it as the front door and this file as the map behind it. Without a gate, start here.
+If this workspace runs with an orchestration gate, the entry procedure is **`/semi-auto-flow`**, not this skill. It classifies the request, grades the risk, writes the snapshot, and only then routes, holding one design interview up front and stopping nowhere after it. Treat it as the front door and this file as the map behind it. Without a gate, start here.
 
 ## The main flow: idea → ship
 

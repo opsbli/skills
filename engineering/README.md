@@ -7,7 +7,7 @@ Skills I use daily for code work.
 Reachable only when you type them (Claude Code: `disable-model-invocation: true`; Codex: `policy.allow_implicit_invocation: false` in `agents/openai.yaml`).
 
 - **[ask-matt](./ask-matt/SKILL.md)**: Ask which skill or flow fits your situation. A router over the user-invoked skills in this repo.
-- **[dev-flow](./dev-flow/SKILL.md)**: The gated entry procedure: classify the request, grade its risk, write a plan snapshot, then route. Takes precedence over `/ask-matt` in a workspace whose orchestration gate is on.
+- **[semi-auto-flow](./semi-auto-flow/SKILL.md)**: The gated entry procedure: classify the request, interview the design once when it earns it, write a plan snapshot, then run spec, tickets, implement, review and commit unattended. Takes precedence over `/ask-matt` in a workspace whose orchestration gate is on.
 - **[create-verification-skill](./create-verification-skill/SKILL.md)**: Generate a project-local skill that launches the app, drives it the way a user does, and captures proof of behavior, plus a feature map of what to cover.
 - **[maintain-verification-skill](./maintain-verification-skill/SKILL.md)**: The upkeep loop for that generated skill: re-read every feature from source, drive every feature live, triage drift against harness and product gaps, ship at most one PR of proven corrections.
 - **[grill-with-docs](./grill-with-docs/SKILL.md)**: Grilling session that also builds your project's domain model, sharpening terminology and updating `GLOSSARY.md` and ADRs inline.

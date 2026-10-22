@@ -7,7 +7,7 @@ argument-hint: "Which app or surface to cover"
 
 # Create a verification skill
 
-Every serious project needs a scripted way to drive the real app and prove behavior: launch it, exercise a feature the way a user would, and capture evidence. This skill generates that as a project-local skill (`.workbuddy/skills/verify-<app>/`) tailored to the repo. You write the generator's output for the next agent, not for a human: it will be read cold, mid-task, by an agent that has never seen the app.
+Every serious project needs a scripted way to drive the real app and prove behavior: launch it, exercise a feature the way a user would, and capture evidence. This skill generates that as a project-local skill (a `verify-<app>` folder in the host's workspace skills directory) tailored to the repo. You write the generator's output for the next agent, not for a human: it will be read cold, mid-task, by an agent that has never seen the app.
 
 ## 1. Interview the repo, not the user
 
@@ -23,7 +23,7 @@ If the checkout doesn't build or start as-is, fix that first (or report it preci
 
 ## 2. Generate the skill
 
-Write `.workbuddy/skills/verify-<app>/SKILL.md` with YAML frontmatter (`name: verify-<app>` and a `description` that names the app, the surface, and when to reach for it, because without frontmatter the skill never registers) and these sections, each grounded in what the interview actually found (no placeholders left):
+Write `verify-<app>/SKILL.md` inside the workspace skills directory — the path the host's system prompt names as its skills location, as a sibling of the other skills. Which directory that is depends on the host, and the two answers are opposite: some hosts scan a dot-directory under the project root (`.workbuddy/skills/`), others supply skills from a configuration directory and never scan `.workbuddy/` at all. Write to the one the host actually reads — a skill filed where nothing scans it never registers, and the failure is silent. The file needs YAML frontmatter (`name: verify-<app>` and a `description` that names the app, the surface, and when to reach for it, because without frontmatter the skill never registers) and these sections, each grounded in what the interview actually found (no placeholders left):
 
 Leave `disable-model-invocation` off the generated skill. Its whole job is for an agent to reach it mid-task without being told, so it has to be model-invoked.
 
@@ -36,7 +36,7 @@ Leave `disable-model-invocation` off the generated skill. Its whole job is for a
 
 ## 3. Seed the feature map
 
-Create `.workbuddy/skills/verify-<app>/features/README.md` plus one file per user-facing feature you can identify (aim for the top 3-5 to start, from routes, commands, menus, or docs). Follow the shape in [`feature-map-example/`](feature-map-example/), with a README index and one file per feature. Each file answers, from the user's point of view: what the feature is, how to reach it, how to drive it with the harness, and what observable end state proves it works. The four H2s are `Sub-features`, `How to get to it (user POV)`, `Driving it with <harness>`, and `Gotchas`. If the seed data lacks a precondition that a journey needs, the journey reports a failure and the reason goes in that feature's `Gotchas`. Never weaken the journey to make it pass. The map is the repo's maintained verification source; a proof that drives one convenient entry point is incomplete when the map lists others.
+Create `verify-<app>/features/README.md` in that same workspace skills directory, plus one file per user-facing feature you can identify (aim for the top 3-5 to start, from routes, commands, menus, or docs). Follow the shape in [`feature-map-example/`](feature-map-example/), with a README index and one file per feature. Each file answers, from the user's point of view: what the feature is, how to reach it, how to drive it with the harness, and what observable end state proves it works. The four H2s are `Sub-features`, `How to get to it (user POV)`, `Driving it with <harness>`, and `Gotchas`. If the seed data lacks a precondition that a journey needs, the journey reports a failure and the reason goes in that feature's `Gotchas`. Never weaken the journey to make it pass. The map is the repo's maintained verification source; a proof that drives one convenient entry point is incomplete when the map lists others.
 
 ## 4. Prove the generated skill before handing it over
 
